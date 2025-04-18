@@ -61,7 +61,7 @@
           <span class="link-title">Dashboard</span>
         </a>
       </li>
-      <li class="nav-item nav-category">web apps</li>
+      <li class="nav-item nav-category">Community</li>
       <li class="nav-item ">
         <a class="nav-link" data-bs-toggle="collapse" href="#email" role="button" aria-expanded="false" aria-controls="email">
           <i class="link-icon" data-feather="mail"></i>
@@ -88,12 +88,6 @@
           <span class="link-title">Chat</span>
         </a>
       </li>
-      <li class="nav-item ">
-        <a href="apps/calendar.html" class="nav-link">
-          <i class="link-icon" data-feather="calendar"></i>
-          <span class="link-title">Calendar</span>
-        </a>
-      </li>
       <li class="nav-item nav-category">Components</li>
       <li class="nav-item ">
         <a class="nav-link" data-bs-toggle="collapse" href="#uiComponents" role="button" aria-expanded="false" aria-controls="uiComponents">
@@ -107,70 +101,10 @@
               <a href="ui-components/accordion.html" class="nav-link ">Accordion</a>
             </li>
             <li class="nav-item">
-              <a href="ui-components/alerts.html" class="nav-link ">Alerts</a>
-            </li>
-            <li class="nav-item">
-              <a href="ui-components/badges.html" class="nav-link ">Badges</a>
-            </li>
-            <li class="nav-item">
-              <a href="ui-components/breadcrumbs.html" class="nav-link ">Breadcrumbs</a>
-            </li>
-            <li class="nav-item">
-              <a href="ui-components/buttons.html" class="nav-link ">Buttons</a>
-            </li>
-            <li class="nav-item">
-              <a href="ui-components/button-group.html" class="nav-link ">Button group</a>
-            </li>
-            <li class="nav-item">
-              <a href="ui-components/cards.html" class="nav-link ">Cards</a>
-            </li>
-            <li class="nav-item">
-              <a href="ui-components/carousel.html" class="nav-link ">Carousel</a>
-            </li>
-            <li class="nav-item">
-              <a href="ui-components/collapse.html" class="nav-link ">Collapse</a>
-            </li>
-            <li class="nav-item">
-              <a href="ui-components/dropdowns.html" class="nav-link ">Dropdowns</a>
-            </li>
-            <li class="nav-item">
-              <a href="ui-components/list-group.html" class="nav-link ">List group</a>
-            </li>
-            <li class="nav-item">
-              <a href="ui-components/media-object.html" class="nav-link ">Media object</a>
-            </li>
-            <li class="nav-item">
-              <a href="ui-components/modal.html" class="nav-link ">Modal</a>
-            </li>
-            <li class="nav-item">
-              <a href="ui-components/navs.html" class="nav-link ">Navs</a>
-            </li>
-            <li class="nav-item">
-              <a href="ui-components/navbar.html" class="nav-link ">Navbar</a>
-            </li>
-            <li class="nav-item">
-              <a href="ui-components/pagination.html" class="nav-link ">Pagination</a>
-            </li>
-            <li class="nav-item">
-              <a href="ui-components/popovers.html" class="nav-link ">Popvers</a>
-            </li>
-            <li class="nav-item">
-              <a href="ui-components/progress.html" class="nav-link ">Progress</a>
-            </li>
-            <li class="nav-item">
-              <a href="ui-components/scrollbar.html" class="nav-link ">Scrollbar</a>
-            </li>
-            <li class="nav-item">
               <a href="ui-components/scrollspy.html" class="nav-link ">Scrollspy</a>
             </li>
             <li class="nav-item">
               <a href="ui-components/spinners.html" class="nav-link ">Spinners</a>
-            </li>
-            <li class="nav-item">
-              <a href="ui-components/tabs.html" class="nav-link ">Tabs</a>
-            </li>
-            <li class="nav-item">
-              <a href="ui-components/tooltips.html" class="nav-link ">Tooltips</a>
             </li>
           </ul>
         </div>
@@ -281,36 +215,15 @@
           </ul>
         </div>
       </li>
-      <li class="nav-item nav-category">Pages</li>
+      <li class="nav-item nav-category">Users</li>
+
       <li class="nav-item ">
-        <a class="nav-link" data-bs-toggle="collapse" href="#general" role="button" aria-expanded="false" aria-controls="general">
-          <i class="link-icon" data-feather="book"></i>
-          <span class="link-title">Special Pages</span>
-          <i class="link-arrow" data-feather="chevron-down"></i>
+        <a href="apps/calendar.html" class="nav-link">
+          <i class="link-icon" data-feather="calendar"></i>
+          <span class="link-title">User List</span>
         </a>
-        <div class="collapse " id="general">
-          <ul class="nav sub-menu">
-            <li class="nav-item">
-              <a href="general/blank-page.html" class="nav-link ">Blank page</a>
-            </li>
-            <li class="nav-item">
-              <a href="general/faq.html" class="nav-link ">Faq</a>
-            </li>
-            <li class="nav-item">
-              <a href="general/invoice.html" class="nav-link ">Invoice</a>
-            </li>
-            <li class="nav-item">
-              <a href="general/profile.html" class="nav-link ">Profile</a>
-            </li>
-            <li class="nav-item">
-              <a href="general/pricing.html" class="nav-link ">Pricing</a>
-            </li>
-            <li class="nav-item">
-              <a href="general/timeline.html" class="nav-link ">Timeline</a>
-            </li>
-          </ul>
-        </div>
       </li>
+
       <li class="nav-item ">
         <a class="nav-link" data-bs-toggle="collapse" href="#auth" role="button" aria-expanded="false" aria-controls="auth">
           <i class="link-icon" data-feather="unlock"></i>
@@ -320,7 +233,7 @@
         <div class="collapse " id="auth">
           <ul class="nav sub-menu">
             <li class="nav-item">
-              <a href="auth/login.html" class="nav-link ">Login</a>
+              <a href="auth/login.html" class="nav-link ">Logins</a>
             </li>
             <li class="nav-item">
               <a href="auth/register.html" class="nav-link ">Register</a>
@@ -328,30 +241,34 @@
           </ul>
         </div>
       </li>
+
+      <li class="nav-item nav-category">Settings</li>
       <li class="nav-item ">
-        <a class="nav-link" data-bs-toggle="collapse" href="#error" role="button" aria-expanded="false" aria-controls="error">
-          <i class="link-icon" data-feather="cloud-off"></i>
-          <span class="link-title">Error</span>
+        <a class="nav-link" data-bs-toggle="collapse" href="#emailaaa" role="button" aria-expanded="false" aria-controls="email">
+          <i class="link-icon" data-feather="mail"></i>
+          <span class="link-title">System</span>
           <i class="link-arrow" data-feather="chevron-down"></i>
         </a>
-        <div class="collapse " id="error">
+        <div class="collapse " id="email">
           <ul class="nav sub-menu">
             <li class="nav-item">
-              <a href="error/404.html" class="nav-link ">404</a>
+              <a href="auth/login.html" class="nav-link ">Regions</a>
             </li>
             <li class="nav-item">
-              <a href="error/500.html" class="nav-link ">500</a>
+              <a href="auth/register.html" class="nav-link ">Sub Regions</a>
+            </li>
+            <li class="nav-item">
+              <a href="auth/register.html" class="nav-link ">Countries</a>
+            </li>
+            <li class="nav-item">
+              <a href="auth/register.html" class="nav-link ">Districts</a>
             </li>
           </ul>
         </div>
       </li>
-      <li class="nav-item nav-category">Docs</li>
-      <li class="nav-item">
-        <a href="https://www.nobleui.com/laravel/documentation/docs.html" target="_blank" class="nav-link">
-          <i class="link-icon" data-feather="hash"></i>
-          <span class="link-title">Documentation</span>
-        </a>
-      </li>
+
+
+
     </ul>
   </div>
 </nav>
@@ -1048,7 +965,7 @@
   </div>
 
     <!-- base js -->
-    <script src="js/app.js"></script>
+    <script src="{{ asset('files/js-css/app.js') }}"></script>
     <script src="{{ asset('files/plugins/feather-icons/feather.min.js') }}"></script>
     <script src="{{ asset('files/plugins/perfect-scrollbar/perfect-scrollbar.min.js') }}"></script>
     <!-- end base js -->
