@@ -7,6 +7,7 @@ use App\Http\Controllers\RegionController;
 use App\Http\Controllers\SubregionController;
 use App\Http\Controllers\CountryController;
 use App\Http\Controllers\DistrictController;
+use App\Http\Controllers\Api\PgtAiController;
 
 /*
 |--------------------------------------------------------------------------
@@ -59,6 +60,30 @@ Route::prefix('v1')->group(function () {
             
             // Get all districts (with optional country filter)
             Route::get('districts', [DistrictController::class, 'index']);
+        });
+
+        // Plant Disease Detection Routes
+        Route::prefix('pgt-ai')->group(function () {
+            // Get all results for authenticated user
+            Route::get('/results', [PgtAiController::class, 'index']);
+            
+            // Get results for a specific user
+            Route::get('/users/{user}/results', [PgtAiController::class, 'userResults']);
+            
+            // Get all shared results
+            Route::get('/results/shared', [PgtAiController::class, 'shared']);
+            
+            // Create new result
+            Route::post('/results', [PgtAiController::class, 'store']);
+            
+            // Get specific result
+            Route::get('/results/{result}', [PgtAiController::class, 'show']);
+            
+            // Update result
+            Route::put('/results/{result}', [PgtAiController::class, 'update']);
+            
+            // Delete result
+            Route::delete('/results/{result}', [PgtAiController::class, 'destroy']);
         });
     });
 }); 

@@ -7,6 +7,7 @@ use App\Http\Controllers\SubregionController;
 use App\Http\Controllers\CountryController;
 use App\Http\Controllers\DistrictController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\PgtAiController;
 
 // Public routes
 Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
@@ -46,5 +47,25 @@ Route::middleware(['auth'])->group(function () {
 
     // Logout
     Route::post('/logout', [UserController::class, 'logout'])->name('logout');
+});
+
+Route::middleware(['auth', 'verified'])->group(function () {
+    // Plant Disease Detection Routes
+    Route::prefix('pgt-ai')->name('pgt-ai.')->group(function () {
+        // Dashboard/Overview
+        Route::get('/dashboard', [PgtAiController::class, 'dashboard'])->name('dashboard');
+        
+        // Results Management
+        Route::get('/results', [PgtAiController::class, 'index'])->name('results.index');
+        Route::get('/results/{result}', [PgtAiController::class, 'show'])->name('results.show');
+        Route::put('/results/{result}', [PgtAiController::class, 'update'])->name('results.update');
+        Route::delete('/results/{result}', [PgtAiController::class, 'destroy'])->name('results.destroy');
+        
+        // Shared Results
+        Route::get('/shared', [PgtAiController::class, 'shared'])->name('shared');
+        
+        // User Results
+        Route::get('/users/{user}/results', [PgtAiController::class, 'userResults'])->name('users.results');
+    });
 });
 
