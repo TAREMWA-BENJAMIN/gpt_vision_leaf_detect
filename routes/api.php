@@ -20,6 +20,20 @@ use App\Http\Controllers\Api\PgtAiController;
 |
 */
 
+// Test route to verify API is working
+Route::get('/test', function() {
+    return response()->json(['message' => 'API is working']);
+});
+
+// Plant Disease Detection Routes - Public for testing
+Route::post('/v1/pgt-ai/results', [PgtAiController::class, 'store']);
+Route::get('/v1/pgt-ai/results', [PgtAiController::class, 'index']);
+Route::get('/v1/pgt-ai/results/shared', [PgtAiController::class, 'shared']);
+Route::get('/v1/pgt-ai/results/{result}', [PgtAiController::class, 'show']);
+Route::put('/v1/pgt-ai/results/{result}', [PgtAiController::class, 'update']);
+Route::delete('/v1/pgt-ai/results/{result}', [PgtAiController::class, 'destroy']);
+
+// Other routes can go here
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
@@ -60,30 +74,6 @@ Route::prefix('v1')->group(function () {
             
             // Get all districts (with optional country filter)
             Route::get('districts', [DistrictController::class, 'index']);
-        });
-
-        // Plant Disease Detection Routes
-        Route::prefix('pgt-ai')->group(function () {
-            // Get all results for authenticated user
-            Route::get('/results', [PgtAiController::class, 'index']);
-            
-            // Get results for a specific user
-            Route::get('/users/{user}/results', [PgtAiController::class, 'userResults']);
-            
-            // Get all shared results
-            Route::get('/results/shared', [PgtAiController::class, 'shared']);
-            
-            // Create new result
-            Route::post('/results', [PgtAiController::class, 'store']);
-            
-            // Get specific result
-            Route::get('/results/{result}', [PgtAiController::class, 'show']);
-            
-            // Update result
-            Route::put('/results/{result}', [PgtAiController::class, 'update']);
-            
-            // Delete result
-            Route::delete('/results/{result}', [PgtAiController::class, 'destroy']);
         });
     });
 }); 

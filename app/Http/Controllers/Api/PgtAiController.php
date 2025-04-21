@@ -66,7 +66,7 @@ class PgtAiController extends Controller
     public function store(PgtAiResultRequest $request): JsonResponse
     {
         $data = $request->validated();
-        $data['user_id'] = $request->user()->id;
+        //$data['user_id'] = $request->user()->id;
 
         $result = $this->pgtAiService->createResult($data);
 
