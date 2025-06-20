@@ -1,4 +1,3 @@
-
 (function($) {
   'use strict';
   $(function() {
@@ -10,6 +9,7 @@
     
 
     // For Buy Now button. 
+    /* REMOVED: Dynamically added 'Buy Now' button and documentation link 
     $("body").prepend('\
       <div class="buy-now-wrapper">\
         <a href="https://www.nobleui.com/laravel/documentation/docs.html" target="_blank" class="btn btn-primary text-white fw-bold btn-icon-text">\
@@ -21,10 +21,11 @@
       </a>\
       </div>\
     ');
+    */
 
 
     // Enable feather-icons with SVG markup
-    feather.replace();
+    // feather.replace();
 
 
     // initialize clipboard plugin

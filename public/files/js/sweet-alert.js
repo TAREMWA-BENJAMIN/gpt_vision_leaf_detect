@@ -42,7 +42,7 @@ $(function() {
           '<i data-feather="thumbs-up"></i>',
         cancelButtonAriaLabel: 'Thumbs down',
       });
-      feather.replace();
+      // feather.replace();
     } else if (type === 'custom-position') {
       Swal.fire({
         position: 'top-end',

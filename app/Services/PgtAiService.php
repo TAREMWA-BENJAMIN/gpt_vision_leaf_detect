@@ -6,6 +6,7 @@ use App\Models\PgtAiResult;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Storage;
 
 class PgtAiService
 {
@@ -37,6 +38,22 @@ class PgtAiService
      */
     public function createResult(array $data): PgtAiResult
     {
+        // Handle base64 image upload
+        if (isset($data['plant_image']) && str_starts_with($data['plant_image'], 'data:image')) {
+            $base64Image = $data['plant_image'];
+            @list($type, $fileData) = explode(';base64,', $base64Image);
+            $extension = explode('/', $type)[1];
+            $imageName = 'plant_' . time() . '.' . $extension;
+            
+            Storage::disk('public')->put('plant_images/' . $imageName, base64_decode($fileData));
+            $data['plant_image'] = 'plant_images/' . $imageName; // Store the path
+        }
+
+        // Ensure user_id is set for the result
+        if (!isset($data['user_id'])) {
+            $data['user_id'] = auth()->id();
+        }
+
         return PgtAiResult::create($data);
     }
 

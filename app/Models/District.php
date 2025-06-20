@@ -16,15 +16,7 @@ class District extends Model
      */
     protected $fillable = [
         'name',
-        'country_id',
-        'country_code',
-        'fips_code',
-        'iso2',
-        'type',
-        'level',
-        'parent_id',
-        'latitude',
-        'longitude',
+        'region_id',
         'flag',
     ];
 
@@ -39,8 +31,8 @@ class District extends Model
     /**
      * Get the country that this district belongs to.
      */
-    public function country()
+    public function region()
     {
-        return $this->belongsTo(Country::class);
+        return $this->belongsTo(Region::class);
     }
 } 

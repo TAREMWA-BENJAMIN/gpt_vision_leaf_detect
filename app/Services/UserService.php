@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\DB;
 
 class UserService
 {
@@ -16,7 +17,19 @@ class UserService
      */
     public function getAll(int $perPage = 15): LengthAwarePaginator
     {
-        return User::with(['subregion', 'country', 'district'])
+        return User::with(['district'])
+            ->select(
+                'id',
+                'first_name',
+                'last_name',
+                'phone_number',
+                'email',
+                'user_type',
+                'district_id',
+                'is_verified as status',
+                'photo',
+                'created_at'
+            )
             ->latest()
             ->paginate($perPage);
     }
@@ -29,7 +42,7 @@ class UserService
      */
     public function getById(int $id): ?User
     {
-        return User::with(['subregion', 'country', 'district'])
+        return User::with(['district'])
             ->find($id);
     }
 
@@ -42,7 +55,10 @@ class UserService
     public function create(array $data): User
     {
         if (isset($data['photo'])) {
-            $data['photo'] = $this->processBase64Image($data['photo']);
+            if (str_starts_with($data['photo'], 'data:image')) {
+                $data['photo'] = $this->processBase64Image($data['photo']);
+            }
+            // else: keep the file path as is
         }
 
         $data['password'] = Hash::make($data['password']);
@@ -59,7 +75,10 @@ class UserService
     public function update(User $user, array $data): User
     {
         if (isset($data['photo'])) {
-            $data['photo'] = $this->processBase64Image($data['photo']);
+            if (str_starts_with($data['photo'], 'data:image')) {
+                $data['photo'] = $this->processBase64Image($data['photo']);
+            }
+            // else: keep the file path as is
         }
 
         if (isset($data['password'])) {
@@ -69,7 +88,7 @@ class UserService
         }
 
         $user->update($data);
-        return $user->load(['subregion', 'country', 'district']);
+        return $user->load(['district']);
     }
 
     /**
@@ -80,6 +99,7 @@ class UserService
      */
     public function delete(User $user): bool
     {
+        DB::table('sessions')->where('user_id', $user->id)->delete();
         return $user->delete();
     }
 

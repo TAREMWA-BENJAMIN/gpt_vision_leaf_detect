@@ -1,134 +1,97 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="page-content">
-    <!-- Welcome Header -->
-    <div class="d-flex justify-content-between align-items-center flex-wrap grid-margin">
-        <div>
-            <h4 class="mb-3 mb-md-0">Welcome to Dashboard</h4>
-        </div>
-        <div class="d-flex align-items-center flex-wrap text-nowrap">
-            <!-- Date Picker -->
-            <div class="input-group date datepicker wd-200 me-2 mb-2 mb-md-0">
-                <span class="input-group-text input-group-addon bg-transparent border-primary">
-                    <i data-feather="calendar" class="text-primary"></i>
-                </span>
-                <input type="text" class="form-control bg-transparent border-primary" value="19-Apr-2025" readonly>
+<div class="container-fluid">
+    <!-- Welcome Section -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="welcome-card bg-gradient-primary text-white p-2 rounded-lg shadow">
+                <div class="d-flex justify-content-between align-items-center">
+                    
+                    <div class="welcome-icon">
+                        <i class="fas fa-leaf fa-3x"></i>
+                    </div>
+                </div>
             </div>
-            <!-- Action Buttons -->
-            <button type="button" class="btn btn-outline-primary btn-icon-text me-2 mb-2 mb-md-0">
-                <i class="btn-icon-prepend" data-feather="printer"></i>
-                Print
-            </button>
-            <button type="button" class="btn btn-primary btn-icon-text mb-2 mb-md-0">
-                <i class="btn-icon-prepend" data-feather="download-cloud"></i>
-                Download Report
-            </button>
         </div>
     </div>
 
     <!-- Statistics Cards -->
-    <div class="row">
-        <div class="col-12 col-xl-12 stretch-card">
-            <div class="row flex-grow-1">
-                <!-- New Customers Card -->
-                <div class="col-md-4 grid-margin stretch-card">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-baseline">
-                                <h6 class="card-title mb-0">NEW CUSTOMERS</h6>
-                                <div class="dropdown">
-                                    <button class="btn p-0" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <i class="icon-lg text-muted pb-3px" data-feather="more-horizontal"></i>
-                                    </button>
-                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                        <a class="dropdown-item d-flex align-items-center" href="#"><i data-feather="eye" class="icon-sm me-2"></i> <span class="">View</span></a>
-                                        <a class="dropdown-item d-flex align-items-center" href="#"><i data-feather="download" class="icon-sm me-2"></i> <span class="">Download</span></a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-6 col-md-12 col-xl-5">
-                                    <h3 class="mb-2">3,897</h3>
-                                    <div class="d-flex align-items-baseline">
-                                        <p class="text-success">
-                                            <span>+3.3%</span>
-                                            <i data-feather="arrow-up" class="icon-sm mb-1"></i>
-                                        </p>
-                                    </div>
-                                </div>
-                                <div class="col-6 col-md-12 col-xl-7">
-                                    <div id="customersChart" class="mt-md-3 mt-xl-0"></div>
-                                </div>
-                            </div>
+    <div class="row mb-4">
+        <!-- Total Users Card -->
+        <div class="col-md-3">
+            <div class="card stat-card h-100 border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-muted mb-2">Total Users</h6>
+                            <h3 class="mb-0">{{ $totalUsers ?? 0 }}</h3>
+                            <p class="text-success mb-0">
+                                <i data-feather="arrow-up"></i> 12% from last month
+                            </p>
+                        </div>
+                        <div class="stat-icon bg-primary-light">
+                            <i data-feather="users" class="text-primary"></i>
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
 
-                <!-- New Orders Card -->
-                <div class="col-md-4 grid-margin stretch-card">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-baseline">
-                                <h6 class="card-title mb-0">NEW ORDERS</h6>
-                                <div class="dropdown">
-                                    <button class="btn p-0" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <i class="icon-lg text-muted pb-3px" data-feather="more-horizontal"></i>
-                                    </button>
-                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
-                                        <a class="dropdown-item d-flex align-items-center" href="#"><i data-feather="eye" class="icon-sm me-2"></i> <span class="">View</span></a>
-                                        <a class="dropdown-item d-flex align-items-center" href="#"><i data-feather="download" class="icon-sm me-2"></i> <span class="">Download</span></a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-6 col-md-12 col-xl-5">
-                                    <h3 class="mb-2">35,084</h3>
-                                    <div class="d-flex align-items-baseline">
-                                        <p class="text-danger">
-                                            <span>-2.8%</span>
-                                            <i data-feather="arrow-down" class="icon-sm mb-1"></i>
-                                        </p>
-                                    </div>
-                                </div>
-                                <div class="col-6 col-md-12 col-xl-7">
-                                    <div id="ordersChart" class="mt-md-3 mt-xl-0"></div>
-                                </div>
-                            </div>
+        <!-- Total Scans Submitted Card -->
+        <div class="col-md-3">
+            <div class="card stat-card h-100 border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-muted mb-2">Total Scans Submitted</h6>
+                            <h3 class="mb-0">{{ $totalScansSubmitted ?? 0 }}</h3>
+                            <p class="text-muted mb-0">
+                                <i data-feather="bar-chart-2"></i> Overall count
+                            </p>
+                        </div>
+                        <div class="stat-icon bg-warning-light">
+                            <i data-feather="leaf" class="text-warning"></i>
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
 
-                <!-- Growth Card -->
-                <div class="col-md-4 grid-margin stretch-card">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-baseline">
-                                <h6 class="card-title mb-0">GROWTH</h6>
-                                <div class="dropdown">
-                                    <button class="btn p-0" type="button" id="dropdownMenuButton3" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <i class="icon-lg text-muted pb-3px" data-feather="more-horizontal"></i>
-                                    </button>
-                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton3">
-                                        <a class="dropdown-item d-flex align-items-center" href="#"><i data-feather="eye" class="icon-sm me-2"></i> <span class="">View</span></a>
-                                        <a class="dropdown-item d-flex align-items-center" href="#"><i data-feather="download" class="icon-sm me-2"></i> <span class="">Download</span></a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-6 col-md-12 col-xl-5">
-                                    <h3 class="mb-2">89.87%</h3>
-                                    <div class="d-flex align-items-baseline">
-                                        <p class="text-success">
-                                            <span>+2.8%</span>
-                                            <i data-feather="arrow-up" class="icon-sm mb-1"></i>
-                                        </p>
-                                    </div>
-                                </div>
-                                <div class="col-6 col-md-12 col-xl-7">
-                                    <div id="growthChart" class="mt-md-3 mt-xl-0"></div>
-                                </div>
-                            </div>
+        <!-- Active Users Card -->
+        <div class="col-md-3">
+            <div class="card stat-card h-100 border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-muted mb-2">Active Users</h6>
+                            <h3 class="mb-0">{{ $activeUsers ?? 0 }}</h3>
+                            <p class="text-success mb-0">
+                                <i data-feather="arrow-up"></i> 8% from last week
+                            </p>
+                        </div>
+                        <div class="stat-icon bg-success-light">
+                            <i data-feather="user-check" class="text-success"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- New Users Card -->
+        <div class="col-md-3">
+            <div class="card stat-card h-100 border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-muted mb-2">New Users</h6>
+                            <h3 class="mb-0">{{ $newUsers ?? 0 }}</h3>
+                            <p class="text-success mb-0">
+                                <i data-feather="arrow-up"></i> 15% from yesterday
+                            </p>
+                        </div>
+                        <div class="stat-icon bg-info-light">
+                            <i data-feather="user-plus" class="text-info"></i>
                         </div>
                     </div>
                 </div>
@@ -136,187 +99,166 @@
         </div>
     </div>
 
-    <!-- Revenue Section -->
-    <div class="row">
-        <div class="col-12 col-xl-12 grid-margin stretch-card">
-            <div class="card">
+    <!-- Charts Section -->
+    <div class="row mb-4">
+        <!-- Disease Detection Trends -->
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white">
+                    <h5 class="card-title mb-0">Disease Detection Trends</h5>
+                </div>
                 <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-baseline mb-4">
-                        <h6 class="card-title mb-0">REVENUE</h6>
-                        <div class="d-flex align-items-center">
-                            <div class="btn-group" role="group">
-                                <button type="button" class="btn btn-outline-primary">Today</button>
-                                <button type="button" class="btn btn-outline-primary">Week</button>
-                                <button type="button" class="btn btn-primary">Month</button>
-                                <button type="button" class="btn btn-outline-primary">Year</button>
-                            </div>
-                        </div>
-                    </div>
-                    <p class="text-muted mb-4">Revenue is the income that a business has from its normal business activities, usually from the sale of goods and services to customers.</p>
-                    <div id="revenueChart"></div>
+                    <canvas id="diseaseTrendsChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Top Detected Diseases -->
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white">
+                    <h5 class="card-title mb-0">Top Detected Diseases</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="topDiseasesChart"></canvas>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Monthly Sales and Storage Section -->
-    <div class="row">
-        <!-- Monthly Sales Chart -->
-        <div class="col-lg-7 col-xl-8 grid-margin stretch-card">
-            <div class="card">
+    <div class="row mb-4">
+        <!-- User Growth Over Time -->
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white">
+                    <h5 class="card-title mb-0">User Growth Over Time</h5>
+                </div>
                 <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-baseline mb-2">
-                        <h6 class="card-title mb-0">Monthly sales</h6>
-                        <div class="dropdown">
-                            <button class="btn p-0" type="button" id="dropdownMenuButton4" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="icon-lg text-muted pb-3px" data-feather="more-horizontal"></i>
-                            </button>
-                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton4">
-                                <a class="dropdown-item d-flex align-items-center" href="#"><i data-feather="eye" class="icon-sm me-2"></i> <span class="">View</span></a>
-                                <a class="dropdown-item d-flex align-items-center" href="#"><i data-feather="download" class="icon-sm me-2"></i> <span class="">Download</span></a>
-                            </div>
-                        </div>
-                    </div>
-                    <p class="text-muted">Sales are activities related to selling or the number of goods or services sold in a given time period.</p>
-                    <div id="monthlySalesChart"></div>
+                    <canvas id="userGrowthChart"></canvas>
                 </div>
             </div>
         </div>
-        
-        <!-- Storage Chart -->
-        <div class="col-lg-5 col-xl-4 grid-margin stretch-card">
-            <div class="card">
+
+        <!-- Quick Actions -->
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white">
+                    <h5 class="card-title mb-0">Quick Actions</h5>
+                </div>
                 <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-baseline mb-2">
-                        <h6 class="card-title mb-0">Cloud storage</h6>
-                        <div class="dropdown">
-                            <button class="btn p-0" type="button" id="dropdownMenuButton5" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="icon-lg text-muted pb-3px" data-feather="more-horizontal"></i>
-                            </button>
-                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton5">
-                                <a class="dropdown-item d-flex align-items-center" href="#"><i data-feather="eye" class="icon-sm me-2"></i> <span class="">View</span></a>
-                                <a class="dropdown-item d-flex align-items-center" href="#"><i data-feather="download" class="icon-sm me-2"></i> <span class="">Download</span></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div id="storageChart"></div>
-                    <div class="row mb-3">
-                        <div class="col-6 d-flex justify-content-end">
-                            <div>
-                                <label class="d-flex align-items-center justify-content-end tx-10 text-uppercase fw-bolder">Total storage <span class="p-1 ms-1 rounded-circle bg-secondary"></span></label>
-                                <h5 class="fw-bolder mb-0 text-end">8TB</h5>
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div>
-                                <label class="d-flex align-items-center tx-10 text-uppercase fw-bolder"><span class="p-1 me-1 rounded-circle bg-primary"></span> Used storage</label>
-                                <h5 class="fw-bolder mb-0">~5TB</h5>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="d-grid">
-                        <button class="btn btn-primary">Upgrade storage</button>
+                    <div class="quick-actions">
+                        <a href="{{ route('users.create') }}" class="btn btn-primary w-100 mb-2">
+                            <i class="fas fa-user-plus me-2"></i> Add New User
+                        </a>
+                        <a href="{{ route('reports.pgt-ai-results') }}" class="btn btn-success w-100 mb-2">
+                            <i class="fas fa-file-alt me-2"></i> Generate Report
+                        </a>
+                        <a href="{{ route('settings.show') }}" class="btn btn-info w-100">
+                            <i class="fas fa-cog me-2"></i> Settings
+                        </a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Projects Table Section -->
-    <div class="row">
-        <div class="col-lg-12 stretch-card">
-            <div class="card">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-baseline mb-2">
-                        <h6 class="card-title mb-0">Projects</h6>
-                        <div class="dropdown mb-2">
-                            <button class="btn btn-link p-0" type="button" id="dropdownMenuButton7" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="icon-lg text-muted pb-3px" data-feather="more-horizontal"></i>
-                            </button>
-                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton7">
-                                <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="eye" class="icon-sm me-2"></i> <span class="">View</span></a>
-                                <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="edit-2" class="icon-sm me-2"></i> <span class="">Edit</span></a>
-                                <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="trash" class="icon-sm me-2"></i> <span class="">Delete</span></a>
-                                <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="printer" class="icon-sm me-2"></i> <span class="">Print</span></a>
-                                <a class="dropdown-item d-flex align-items-center" href="javascript:;"><i data-feather="download" class="icon-sm me-2"></i> <span class="">Download</span></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="table-responsive">
-                        <table class="table table-hover mb-0">
-                            <thead>
-                                <tr>
-                                    <th class="pt-0">#</th>
-                                    <th class="pt-0">Project Name</th>
-                                    <th class="pt-0">Start Date</th>
-                                    <th class="pt-0">Due Date</th>
-                                    <th class="pt-0">Status</th>
-                                    <th class="pt-0">Assign</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td>NobleUI jQuery</td>
-                                    <td>01/01/2023</td>
-                                    <td>26/04/2023</td>
-                                    <td><span class="badge bg-danger">Released</span></td>
-                                    <td>Leonardo Payne</td>
-                                </tr>
-                                <tr>
-                                    <td>2</td>
-                                    <td>NobleUI Angular</td>
-                                    <td>01/01/2023</td>
-                                    <td>26/04/2023</td>
-                                    <td><span class="badge bg-success">Review</span></td>
-                                    <td>Carl Henson</td>
-                                </tr>
-                                <tr>
-                                    <td>3</td>
-                                    <td>NobleUI ReactJs</td>
-                                    <td>01/05/2023</td>
-                                    <td>10/09/2023</td>
-                                    <td><span class="badge bg-info">Pending</span></td>
-                                    <td>Jensen Combs</td>
-                                </tr>
-                                <tr>
-                                    <td>4</td>
-                                    <td>NobleUI VueJs</td>
-                                    <td>01/01/2023</td>
-                                    <td>31/11/2023</td>
-                                    <td><span class="badge bg-warning">Work in Progress</span></td>
-                                    <td>Amiah Burton</td>
-                                </tr>
-                                <tr>
-                                    <td>5</td>
-                                    <td>NobleUI Laravel</td>
-                                    <td>01/01/2023</td>
-                                    <td>31/12/2023</td>
-                                    <td><span class="badge bg-danger">Coming soon</span></td>
-                                    <td>Yaretzi Mayo</td>
-                                </tr>
-                                <tr>
-                                    <td>6</td>
-                                    <td>NobleUI NodeJs</td>
-                                    <td>01/01/2023</td>
-                                    <td>31/12/2023</td>
-                                    <td><span class="badge bg-primary">Coming soon</span></td>
-                                    <td>Carl Henson</td>
-                                </tr>
-                                <tr>
-                                    <td class="border-bottom">3</td>
-                                    <td class="border-bottom">NobleUI EmberJs</td>
-                                    <td class="border-bottom">01/05/2023</td>
-                                    <td class="border-bottom">10/11/2023</td>
-                                    <td class="border-bottom"><span class="badge bg-info">Pending</span></td>
-                                    <td class="border-bottom">Jensen Combs</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    {{-- Removed Recent Activity Section --}}
+
 </div>
+
+<style>
+    .welcome-card {
+        background: linear-gradient(45deg, #4e73df, #224abe);
+    }
+
+    .stat-card {
+        transition: transform 0.2s;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-5px);
+    }
+
+    .stat-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .bg-primary-light {
+        background-color: rgba(78, 115, 223, 0.1);
+    }
+
+    .bg-success-light {
+        background-color: rgba(40, 167, 69, 0.1);
+    }
+
+    .bg-info-light {
+        background-color: rgba(23, 162, 184, 0.1);
+    }
+
+    .activity-list {
+        max-height: 400px;
+        overflow-y: auto;
+    }
+
+    .activity-item {
+        padding: 10px;
+        border-radius: 8px;
+        transition: background-color 0.2s;
+    }
+
+    .activity-item:hover {
+        background-color: #f8f9fa;
+    }
+
+    .activity-icon {
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .quick-actions .btn {
+        padding: 12px;
+        font-weight: 500;
+        border-radius: 8px;
+        transition: all 0.2s;
+    }
+
+    .quick-actions .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+</style>
 @endsection
+
+@push('scripts')
+<!-- Required JavaScript -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.0/dist/chart.min.js"></script>
+<script src="{{ asset('files/js/dashboard-charts.js') }}"></script>
+
+<!-- Debug script -->
+<script>
+    $(document).ready(function() {
+        console.log('Dashboard page loaded');
+        
+        // Test chart data endpoint
+        $.ajax({
+            url: '/dashboard/chart-data',
+            method: 'GET',
+            success: function(response) {
+                console.log('Chart data received:', response);
+            },
+            error: function(xhr, status, error) {
+                console.error('Error fetching chart data:', error);
+            }
+        });
+    });
+</script>
+@endpush

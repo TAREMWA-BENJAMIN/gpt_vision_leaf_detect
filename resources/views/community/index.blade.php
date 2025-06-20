@@ -1,0 +1,209 @@
+@extends('layouts.app')
+
+@section('content')
+<style>
+    .forum-bg {
+        background: linear-gradient(120deg, #e8f5e9 0%, #f1f8e9 100%);
+        min-height: 100vh;
+        padding: 80px 0 16px 0;
+    }
+    .forum-card {
+        border-radius: 18px;
+        box-shadow: 0 4px 24px rgba(46, 125, 50, 0.08);
+        border: none;
+        margin-bottom: 32px;
+        background: #fff;
+        transition: box-shadow 0.2s;
+    }
+    .forum-card:hover {
+        box-shadow: 0 8px 32px rgba(46, 125, 50, 0.15);
+    }
+    .forum-avatar {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid #a5d6a7;
+        margin-right: 16px;
+    }
+    .forum-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 8px;
+    }
+    .forum-user {
+        font-weight: 600;
+        color: #388e3c;
+    }
+    .forum-time {
+        color: #8bc34a;
+        font-size: 0.95em;
+        margin-left: 12px;
+    }
+    .forum-content {
+        font-size: 1.1em;
+        margin-bottom: 12px;
+    }
+    .forum-image {
+        max-width: 320px;
+        border-radius: 12px;
+        margin-bottom: 10px;
+        border: 1px solid #c8e6c9;
+    }
+    .forum-replies {
+        background: #f9fbe7;
+        border-radius: 12px;
+        padding: 16px;
+        margin-top: 18px;
+    }
+    .forum-reply {
+        border-left: 3px solid #a5d6a7;
+        padding-left: 12px;
+        margin-bottom: 12px;
+    }
+    .forum-reply-user {
+        color: #558b2f;
+        font-weight: 500;
+    }
+    .forum-reply-time {
+        color: #b2b2b2;
+        font-size: 0.9em;
+        margin-left: 8px;
+    }
+    .plant-icon {
+        color: #66bb6a;
+        margin-right: 8px;
+        font-size: 1.3em;
+    }
+    .floating-action-button {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        width: 60px;
+        height: 60px;
+        font-size: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        z-index: 1000;
+    }
+    .forum-heading {
+        margin-top: 12px;
+    }
+</style>
+<div class="forum-bg">
+    <div class="container">
+        @forelse($posts as $chat)
+            <div class="card forum-card">
+                <div class="card-body">
+                    <div class="forum-header">
+                        <img src="{{ $chat->creator->photo ? asset('storage/' . $chat->creator->photo) : asset('images/default-avatar.png') }}" class="forum-avatar">
+                        <div>
+                            <span class="forum-user">{{ $chat->creator->first_name ?? $chat->creator->name }} {{ $chat->creator->last_name ?? '' }}</span><br>
+                            <span class="forum-time">{{ $chat->chat_created_at->diffForHumans() }}</span>
+                        </div>
+                    </div>
+                    <div class="forum-content"><strong>Topic:</strong> {{ $chat->chat_topic }}</div>
+
+                    <div class="forum-replies mt-3">
+                        <strong>Messages:</strong>
+                        @forelse($chat->messages->whereNull('message_parent_id') as $message)
+                            <div class="forum-reply">
+                                <span class="forum-reply-user">{{ $message->user->first_name ?? $message->user->name }}</span>
+                                <span class="forum-reply-time">{{ $message->message_datetime->diffForHumans() }}</span><br>
+                                {{ $message->message_text }}
+                                @if($message->attachments->isNotEmpty())
+                                    @foreach($message->attachments as $attachment)
+                                        <img src="{{ asset('storage/' . $attachment->attachment_url) }}" class="forum-image mt-2">
+                                    @endforeach
+                                @endif
+
+                                <div class="mt-2">
+                                    <button class="btn btn-sm btn-outline-success" data-bs-toggle="collapse" data-bs-target="#replyForm{{ $message->id }}" aria-expanded="false" aria-controls="replyForm{{ $message->id }}">
+                                        Reply
+                                    </button>
+                                </div>
+
+                                <div class="collapse mt-2" id="replyForm{{ $message->id }}">
+                                    <form action="{{ route('community.reply', $message->id) }}" method="POST" enctype="multipart/form-data">
+                                        @csrf
+                                        <div class="mb-2">
+                                            <textarea name="message_text" class="form-control form-control-sm" rows="2" placeholder="Write your reply..." required></textarea>
+                                        </div>
+                                        <div class="mb-2">
+                                            <label for="replyAttachment{{ $message->id }}" class="form-label">Attachment (Optional)</label>
+                                            <input type="file" class="form-control form-control-sm" id="replyAttachment{{ $message->id }}" name="attachment">
+                                        </div>
+                                        <button type="submit" class="btn btn-primary btn-sm">Submit Reply</button>
+                                    </form>
+                                </div>
+
+                                @if($message->replies->isNotEmpty())
+                                    <div class="ms-4 mt-2">
+                                        <strong>Replies:</strong>
+                                        @foreach($message->replies as $reply)
+                                            <div class="forum-reply">
+                                                <span class="forum-reply-user">{{ $reply->user->first_name ?? $reply->user->name }}</span>
+                                                <span class="forum-reply-time">{{ $reply->message_datetime->diffForHumans() }}</span><br>
+                                                {{ $reply->message_text }}
+                                                @if($reply->attachments->isNotEmpty())
+                                                    @foreach($reply->attachments as $attachment)
+                                                        <img src="{{ asset('storage/' . $attachment->attachment_url) }}" class="forum-image mt-2">
+                                                    @endforeach
+                                                @endif
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                @endif
+                            </div>
+                        @empty
+                            <div class="text-muted">No messages yet for this topic.</div>
+                        @endforelse
+                    </div>
+                </div>
+            </div>
+        @empty
+            <div class="alert alert-info">No forum topics yet. Be the first to create one!</div>
+        @endforelse
+
+        <!-- Floating Action Button for New Post -->
+        <button class="btn btn-success rounded-circle floating-action-button" data-bs-toggle="modal" data-bs-target="#newChatModal">
+            <i class="fas fa-plus"></i>
+        </button>
+    </div>
+</div>
+
+<!-- New Chat Modal -->
+<div class="modal fade" id="newChatModal" tabindex="-1" aria-labelledby="newChatModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="newChatModalLabel">Create New Topic</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="{{ route('community.store') }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="chatTopic" class="form-label">Topic Title</label>
+                        <input type="text" class="form-control" id="chatTopic" name="chat_topic" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="chatMessage" class="form-label">Initial Message</label>
+                        <textarea class="form-control" id="chatMessage" name="message_text" rows="3" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="chatAttachment" class="form-label">Attachment (Optional)</label>
+                        <input type="file" class="form-control" id="chatAttachment" name="attachment">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Create Topic</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@endsection 

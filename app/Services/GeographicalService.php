@@ -3,8 +3,6 @@
 namespace App\Services;
 
 use App\Models\Region;
-use App\Models\Subregion;
-use App\Models\Country;
 use App\Models\District;
 use Illuminate\Database\Eloquent\Collection;
 
@@ -24,18 +22,13 @@ class GeographicalService
     }
 
     /**
-     * Get subregions for a specific region
+     * Get all regions (alias for getRegions)
      *
-     * @param Region $region
      * @return Collection
      */
-    public function getSubregionsByRegion(Region $region): Collection
+    public function getAllRegions(): Collection
     {
-        return Subregion::select('id', 'name')
-            ->where('region_id', $region->id)
-            ->where('flag', true)
-            ->orderBy('name')
-            ->get();
+        return $this->getRegions();
     }
 
     /**
@@ -48,21 +41,6 @@ class GeographicalService
     {
         return Country::select('id', 'name', 'iso2')
             ->where('region_id', $region->id)
-            ->where('flag', true)
-            ->orderBy('name')
-            ->get();
-    }
-
-    /**
-     * Get countries for a specific subregion
-     *
-     * @param Subregion $subregion
-     * @return Collection
-     */
-    public function getCountriesBySubregion(Subregion $subregion): Collection
-    {
-        return Country::select('id', 'name', 'iso2')
-            ->where('subregion_id', $subregion->id)
             ->where('flag', true)
             ->orderBy('name')
             ->get();
@@ -98,7 +76,7 @@ class GeographicalService
      */
     public function getDistrictsByCountry(Country $country): Collection
     {
-        return District::select('id', 'name', 'type')
+        return District::select('id', 'name', 'region_id', 'flag')
             ->where('country_id', $country->id)
             ->where('flag', true)
             ->orderBy('name')
@@ -113,7 +91,7 @@ class GeographicalService
      */
     public function getDistricts(array $filters = []): Collection
     {
-        $query = District::select('id', 'name', 'type', 'country_id')
+        $query = District::select('id', 'name', 'region_id', 'flag')
             ->where('flag', true);
 
         if (isset($filters['country_id'])) {

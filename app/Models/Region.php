@@ -18,20 +18,4 @@ class Region extends Model
         'name',
         'flag',
     ];
-
-    /**
-     * Get the subregions that belong to this region.
-     */
-    public function subregions()
-    {
-        return $this->hasMany(Subregion::class);
-    }
-
-    /**
-     * Get the countries that belong to this region.
-     */
-    public function countries()
-    {
-        return $this->hasMany(Country::class);
-    }
 } 

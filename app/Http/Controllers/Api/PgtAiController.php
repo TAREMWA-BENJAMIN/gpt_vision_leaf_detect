@@ -24,11 +24,13 @@ class PgtAiController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
-        $results = $this->pgtAiService->getUserResults(
-            $request->user(),
-            $request->boolean('paginate', false),
-            $request->integer('per_page', 10)
-        );
+        // For now, return all results without user filtering
+        $results = PgtAiResult::orderBy('created_at', 'desc')
+            ->when($request->boolean('paginate', false), function($query) use ($request) {
+                return $query->paginate($request->integer('per_page', 10));
+            }, function($query) {
+                return $query->get();
+            });
 
         return response()->json($results);
     }
@@ -66,8 +68,7 @@ class PgtAiController extends Controller
     public function store(PgtAiResultRequest $request): JsonResponse
     {
         $data = $request->validated();
-        //$data['user_id'] = $request->user()->id;
-
+        // Remove user_id requirement for now
         $result = $this->pgtAiService->createResult($data);
 
         return response()->json($result, 201);
@@ -86,10 +87,8 @@ class PgtAiController extends Controller
      */
     public function update(PgtAiResultRequest $request, PgtAiResult $result): JsonResponse
     {
-        $this->authorize('update', $result);
-
+        // Remove authorization check
         $updated = $this->pgtAiService->updateResult($result, $request->validated());
-
         return response()->json(['success' => $updated]);
     }
 
@@ -98,10 +97,8 @@ class PgtAiController extends Controller
      */
     public function destroy(PgtAiResult $result): JsonResponse
     {
-        $this->authorize('delete', $result);
-
+        // Remove authorization check
         $deleted = $this->pgtAiService->deleteResult($result);
-
         return response()->json(['success' => $deleted]);
     }
 } 

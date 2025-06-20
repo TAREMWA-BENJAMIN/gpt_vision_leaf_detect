@@ -27,13 +27,27 @@ class StoreUserRequest extends FormRequest
             'phone_number' => 'nullable|string|unique:users',
             'email' => 'required|email|unique:users',
             'password' => 'required|string',
-            'user_type' => 'in:admin,researcher,user',
-            'subregion_id' => 'nullable|exists:subregions,id',
-            'country_id' => 'nullable|exists:countries,id',
-            'district_id' => 'nullable|exists:districts,id',
+            'user_type' => 'in:admin,user',
+            'region_id' => 'required|exists:regions,id',
+            'district_id' => [
+                'nullable',
+                'exists:districts,id',
+                function ($attribute, $value, $fail) {
+                    $regionId = $this->input('region_id');
+                    if ($value && $regionId) {
+                        $district = \App\Models\District::find($value);
+                        if ($district && $district->regions_id != $regionId) {
+                            $fail('The selected district does not belong to the selected region.');
+                        }
+                    }
+                },
+            ],
+            'title' => 'nullable|string',
+            'specialization' => 'nullable|string',
             'is_verified' => 'boolean',
-            'photo' => 'nullable|string', // base64 string
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'last_login' => 'nullable|date',
+            'organization' => 'nullable|string',
         ];
     }
 }

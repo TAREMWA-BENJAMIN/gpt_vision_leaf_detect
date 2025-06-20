@@ -25,15 +25,6 @@ class RegionController extends Controller
     }
 
     /**
-     * Get subregions for a specific region
-     */
-    public function subregions(Region $region): JsonResponse
-    {
-        $subregions = $this->geographicalService->getSubregionsByRegion($region);
-        return response()->json($subregions);
-    }
-
-    /**
      * Get countries for a specific region
      */
     public function countries(Region $region): JsonResponse

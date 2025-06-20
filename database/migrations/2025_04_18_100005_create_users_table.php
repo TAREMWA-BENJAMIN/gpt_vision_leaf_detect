@@ -16,9 +16,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->enum('user_type', ['admin', 'researcher', 'user'])->default('user');
-            $table->foreignId('subregion_id')->nullable()->constrained('subregions')->onDelete('set null');
-            $table->foreignId('country_id')->nullable()->constrained('countries')->onDelete('set null');
+            $table->enum('user_type', ['admin', 'user'])->default('user');
             $table->foreignId('district_id')->nullable()->constrained('districts')->onDelete('set null');
             $table->boolean('is_verified')->default(false);
             $table->timestamp('last_login')->nullable();

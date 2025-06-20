@@ -23,12 +23,14 @@ class User extends Authenticatable
         'email',
         'password',
         'user_type',
-        'subregion_id',
-        'country_id',
+        'title',
+        'specialization',
         'district_id',
         'is_verified',
         'photo',
         'last_login',
+        'status',
+        'organization',
     ];
 
     /**
@@ -54,19 +56,19 @@ class User extends Authenticatable
     ];
 
     /**
-     * Get the subregion that the user belongs to.
+     * Get the user's full name.
      */
-    public function subregion()
+    public function getNameAttribute()
     {
-        return $this->belongsTo(Subregion::class);
+        return "{$this->first_name} {$this->last_name}";
     }
 
     /**
-     * Get the country that the user belongs to.
+     * Get the user's role.
      */
-    public function country()
+    public function getRoleAttribute()
     {
-        return $this->belongsTo(Country::class);
+        return $this->user_type;
     }
 
     /**
