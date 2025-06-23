@@ -20,12 +20,12 @@ Route::get('/login', [UserController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [UserController::class, 'login']);
 Route::get('/register', [UserController::class, 'showRegistrationForm'])->name('register');
 Route::post('/register', [UserController::class, 'store']);
-
-// User list route (public)
-Route::get('/users', [UserController::class, 'index'])->name('users.index');
+Route::get('districts/by-region', [App\Http\Controllers\UserController::class, 'getDistrictsByRegion'])->name('districts.by-region');
 
 // Protected routes
 Route::middleware(['auth', 'verified'])->group(function () {
+    // User list route (now protected)
+    Route::get('/users', [UserController::class, 'index'])->name('users.index');
     // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/dashboard/chart-data', [DashboardController::class, 'getChartData'])->name('dashboard.chart-data');
@@ -34,6 +34,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/reports/pgt-ai-results', [DashboardController::class, 'showPgtAiResults'])->name('reports.pgt-ai-results');
     Route::get('/reports/pgt-ai-results/pdf', [DashboardController::class, 'exportPgtAiResultsPdf'])->name('reports.pgt-ai-results.pdf');
     Route::get('/reports/pgt-ai-results/excel', [DashboardController::class, 'exportPgtAiResultsExcel'])->name('reports.pgt-ai-results.excel');
+    Route::get('/reports/generate', [PgtAiController::class, 'generateReport'])->name('reports.generate');
 
     // User management
     Route::resource('users', UserController::class);
@@ -58,7 +59,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // District management
     // Route::resource('districts', DistrictController::class);
     Route::get('districts/{district}/users', [DistrictController::class, 'users'])->name('districts.users');
-    Route::get('districts/by-region', [App\Http\Controllers\UserController::class, 'getDistrictsByRegion'])->name('districts.by-region');
 
     // Logout
     Route::post('/logout', [UserController::class, 'logout'])->name('logout');

@@ -3,6 +3,9 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\PgtAiController;
+use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\CommunityController;
+use App\Http\Controllers\Api\RegionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,6 +17,17 @@ use App\Http\Controllers\Api\PgtAiController;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
+
+Route::post('/register', [AuthController::class, 'register']);
+Route::post('/login', [AuthController::class, 'login']);
+Route::get('/regions', [RegionController::class, 'index']);
+Route::get('/regions/{region}/districts', [RegionController::class, 'getDistricts']);
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/user', [AuthController::class, 'user']);
+    Route::post('/logout', [AuthController::class, 'logout']);
+    Route::apiResource('/community', CommunityController::class);
+});
 
 // Test routes for debugging
 Route::get('/', function() {

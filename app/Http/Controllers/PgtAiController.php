@@ -18,6 +18,19 @@ class PgtAiController extends Controller
     }
 
     /**
+     * Display a paginated list of all results for reporting.
+     */
+    public function generateReport(Request $request): View
+    {
+        $results = $this->pgtAiService->getAllResults(
+            true,
+            $request->integer('per_page', 15)
+        );
+
+        return view('pgt-ai.reports.index', compact('results'));
+    }
+
+    /**
      * Display the dashboard
      */
     public function dashboard(): View

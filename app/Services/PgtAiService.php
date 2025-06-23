@@ -34,6 +34,17 @@ class PgtAiService
     }
 
     /**
+     * Get all results for all users
+     */
+    public function getAllResults(bool $paginate = false, int $perPage = 10): Collection|LengthAwarePaginator
+    {
+        $query = PgtAiResult::with('user')
+            ->orderBy('created_at', 'desc');
+
+        return $paginate ? $query->paginate($perPage) : $query->get();
+    }
+
+    /**
      * Create a new result
      */
     public function createResult(array $data): PgtAiResult

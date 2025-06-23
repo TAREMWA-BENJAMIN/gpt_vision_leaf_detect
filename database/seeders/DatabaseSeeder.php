@@ -13,12 +13,9 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // Removed direct user creation as it is handled by UserSeeder
-
-        $this->call([ 
-            UserSeeder::class,
-            ExpertSeeder::class,
+        $this->call([
             GeographicalDataSeeder::class,
+            UserSeeder::class,
         ]);
     }
 }

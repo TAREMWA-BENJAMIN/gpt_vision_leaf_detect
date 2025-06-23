@@ -150,7 +150,7 @@
                         <a href="{{ route('users.create') }}" class="btn btn-primary w-100 mb-2">
                             <i class="fas fa-user-plus me-2"></i> Add New User
                         </a>
-                        <a href="{{ route('reports.pgt-ai-results') }}" class="btn btn-success w-100 mb-2">
+                        <a href="{{ route('reports.generate') }}" class="btn btn-success w-100 mb-2">
                             <i class="fas fa-file-alt me-2"></i> Generate Report
                         </a>
                         <a href="{{ route('settings.show') }}" class="btn btn-info w-100">

@@ -36,7 +36,7 @@ class StoreUserRequest extends FormRequest
                     $regionId = $this->input('region_id');
                     if ($value && $regionId) {
                         $district = \App\Models\District::find($value);
-                        if ($district && $district->regions_id != $regionId) {
+                        if ($district && $district->region_id != $regionId) {
                             $fail('The selected district does not belong to the selected region.');
                         }
                     }

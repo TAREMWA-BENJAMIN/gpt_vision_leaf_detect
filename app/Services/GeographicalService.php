@@ -16,7 +16,6 @@ class GeographicalService
     public function getRegions(): Collection
     {
         return Region::select('id', 'name')
-            ->where('flag', true)
             ->orderBy('name')
             ->get();
     }
@@ -84,7 +83,7 @@ class GeographicalService
     }
 
     /**
-     * Get all districts with optional country filter
+     * Get all districts with optional region filter
      *
      * @param array $filters
      * @return Collection
@@ -94,8 +93,8 @@ class GeographicalService
         $query = District::select('id', 'name', 'region_id', 'flag')
             ->where('flag', true);
 
-        if (isset($filters['country_id'])) {
-            $query->where('country_id', $filters['country_id']);
+        if (isset($filters['region_id'])) {
+            $query->where('region_id', $filters['region_id']);
         }
 
         return $query->orderBy('name')->get();

@@ -65,6 +65,9 @@
                         <li class="nav-item">
                             <a href="{{ route('reports.pgt-ai-results') }}" class="nav-link">Detection Statistics</a>
                         </li>
+                        <li class="nav-item">
+                            <a href="{{ route('reports.generate') }}" class="nav-link">Generated Report</a>
+                        </li>
                     </ul>
                 </div>
             </li>
