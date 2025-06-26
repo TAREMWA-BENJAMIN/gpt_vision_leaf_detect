@@ -22,21 +22,31 @@
                             <thead>
                                 <tr>
                                     <th>ID</th>
-                                    <th>Image Path</th>
-                                    <th>Disease Name</th>
-                                    <th>Confidence</th>
-                                    <th>Crop Type</th>
-                                    <th>Detected At</th>
+                                    <th>USER</th>
+                                    <th>PLANT NAME</th>
+                                    <th>PLANT IMAGE</th>
+                                    <th>DISEASE NAME</th>
+                                    <th>DISEASE DETAILS</th>
+                                    <th>SUGGESTED SOLUTION</th>
+                                    <th>PREVENTION TIP</th>
+                                    <th>DETECTED ON</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @forelse($pgtAiResults as $result)
                                 <tr>
                                     <td>{{ $result->id }}</td>
-                                    <td>{{ $result->image_path }}</td>
+                                    <td>{{ $result->user->name ?? 'N/A' }}</td>
+                                    <td>{{ $result->plant_name }}</td>
+                                    <td>
+                                        @if($result->plant_image)
+                                            <img src="{{ asset('storage/' . $result->plant_image) }}" width="60" />
+                                        @endif
+                                    </td>
                                     <td>{{ $result->disease_name }}</td>
-                                    <td>{{ $result->confidence }}</td>
-                                    <td>{{ $result->crop_type }}</td>
+                                    <td>{{ $result->disease_details }}</td>
+                                    <td>{{ $result->suggested_solution }}</td>
+                                    <td>{{ $result->prevention_tips }}</td>
                                     <td>{{ $result->created_at->format('M d, Y H:i:s') }}</td>
                                 </tr>
                                 @empty

@@ -2,12 +2,6 @@
 
 @section('content')
 <div class="page-content">
-    <nav class="page-breadcrumb">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="#">Community</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Agricultural Experts</li>
-        </ol>
-    </nav>
 
     <div class="row">
         <div class="col-md-12 grid-margin stretch-card">
@@ -118,7 +112,9 @@
                     <p><strong>Phone Number:</strong> ${user.phone_number}</p>
                     <p><strong>Role:</strong> ${user.role}</p>
                     <p><strong>District:</strong> ${user.district && user.district.name ? user.district.name : 'Not specified'}</p>
+                    <p><strong>Region:</strong> ${user.region ? user.region : 'Not specified'}</p>
                     <p><strong>Status:</strong> <span class="badge bg-${user.status === 'active' ? 'success' : 'danger'}">${user.status.charAt(0).toUpperCase() + user.status.slice(1)}</span></p>
+                    ${user.role === 'admin' ? `<p><strong>Title:</strong> ${user.title || ''}</p><p><strong>Specialization:</strong> ${user.specialization || ''}</p><p><strong>Organization:</strong> ${user.organization || ''}</p>` : ''}
                 `;
                 $('#expert-details-content').html(html);
                 $('#expertDetailsModal').modal('show');

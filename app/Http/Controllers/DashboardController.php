@@ -10,6 +10,7 @@ use App\Models\PgtAiResult;
 use App\Models\Disease;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
+use PDF;
 
 class DashboardController extends Controller
 {
@@ -18,24 +19,45 @@ class DashboardController extends Controller
      */
     public function index(): View
     {
-        // Get user statistics
-        $totalUsers = User::count();
-        $newUsers = User::where('created_at', '>=', Carbon::now()->subDays(30))->count();
-        
-        // Check if last_active_at column exists before using it
-        $activeUsers = Schema::hasColumn('users', 'last_active_at') 
-            ? User::where('last_active_at', '>=', Carbon::now()->subMinutes(5))->count()
-            : User::count(); // Fallback to total users if column doesn't exist
+        // --- User Statistics ---
 
-        // Get total scans submitted
+        // Total Users
+        $totalUsers = User::count();
+        $totalUsersLastMonth = User::where('created_at', '<', Carbon::now()->subMonth())->count();
+        $totalUsersPercentageChange = $totalUsersLastMonth > 0
+            ? (($totalUsers - $totalUsersLastMonth) / $totalUsersLastMonth) * 100
+            : ($totalUsers > 0 ? 100 : 0);
+
+        // New Users (today)
+        $newUsersToday = User::whereDate('created_at', Carbon::today())->count();
+        $newUsersYesterday = User::whereDate('created_at', Carbon::yesterday())->count();
+        $newUsersPercentageChange = $newUsersYesterday > 0
+            ? (($newUsersToday - $newUsersYesterday) / $newUsersYesterday) * 100
+            : ($newUsersToday > 0 ? 100 : 0);
+
+        // Active Users (this week)
+        $activeUsersThisWeek = Schema::hasColumn('users', 'last_active_at')
+            ? User::where('last_active_at', '>=', Carbon::now()->subWeek())->count()
+            : 0;
+        $activeUsersLastWeek = Schema::hasColumn('users', 'last_active_at')
+            ? User::whereBetween('last_active_at', [Carbon::now()->subWeeks(2), Carbon::now()->subWeek()])->count()
+            : 0;
+        $activeUsersPercentageChange = $activeUsersLastWeek > 0
+            ? (($activeUsersThisWeek - $activeUsersLastWeek) / $activeUsersLastWeek) * 100
+            : ($activeUsersThisWeek > 0 ? 100 : 0);
+
+        // --- Scan Statistics ---
         $totalScansSubmitted = PgtAiResult::count();
 
-        return view('dashboard', compact(
-            'totalUsers',
-            'newUsers',
-            'activeUsers',
-            'totalScansSubmitted'
-        ));
+        return view('dashboard', [
+            'totalUsers' => $totalUsers,
+            'totalUsersPercentageChange' => round($totalUsersPercentageChange),
+            'newUsers' => $newUsersToday,
+            'newUsersPercentageChange' => round($newUsersPercentageChange),
+            'activeUsers' => $activeUsersThisWeek,
+            'activeUsersPercentageChange' => round($activeUsersPercentageChange),
+            'totalScansSubmitted' => $totalScansSubmitted
+        ]);
     }
 
     /**
@@ -52,10 +74,9 @@ class DashboardController extends Controller
      */
     public function exportPgtAiResultsPdf()
     {
-        // Implement PDF export logic here
-        // You will likely need a library like Barryvdh\Dompdf
-        // Example: return Pdf::loadView('reports.pgt_ai_results_pdf', compact('pgtAiResults'))->download('pgt_ai_results.pdf');
-        return response()->json(['message' => 'PDF export functionality to be implemented.']);
+        $pgtAiResults = \App\Models\PgtAiResult::with('user')->get();
+        $pdf = PDF::loadView('reports.pgt_ai_results_pdf', compact('pgtAiResults'));
+        return $pdf->download('pgt_ai_results.pdf');
     }
 
     /**

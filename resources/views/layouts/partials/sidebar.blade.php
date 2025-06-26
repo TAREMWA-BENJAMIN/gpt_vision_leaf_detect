@@ -1,4 +1,4 @@
-<nav class="sidebar">
+<nav class="sidebar" style="background-color: green;">
     <div class="sidebar-header">
         <a href="#" class="sidebar-brand">
             Plant<span>AI</span>
@@ -11,7 +11,7 @@
     </div>
     <div class="sidebar-body">
         <ul class="nav">
-            <li class="nav-item nav-category">Main</li>
+            <li class="nav-item nav-category" style="color: blue; font-weight: bold;">Main</li>
             <li class="nav-item">
                 <a href="{{ route('dashboard') }}" class="nav-link">
                     <i class="link-icon" data-feather="home"></i>
@@ -19,7 +19,7 @@
                 </a>
             </li>
 
-            <li class="nav-item nav-category">Community</li>
+            <li class="nav-item nav-category" style="color: blue; font-weight: bold;">Community</li>
             <li class="nav-item">
                 <a href="{{ route('experts.index') }}" class="nav-link">
                     <i class="link-icon" data-feather="users"></i>
@@ -33,7 +33,7 @@
                 </a>
             </li>
 
-            <li class="nav-item nav-category">Scan GPT DETECTION HISTORY</li>
+            <li class="nav-item nav-category" style="color: blue; font-weight: bold;">Scan GPT DETECTION HISTORY</li>
             <li class="nav-item">
                 <a class="nav-link" data-bs-toggle="collapse" href="#diseases" role="button" aria-expanded="false" aria-controls="diseases">
                     <i class="link-icon" data-feather="database"></i>
@@ -72,7 +72,7 @@
                 </div>
             </li>
             
-            <li class="nav-item nav-category">Users</li>
+            <li class="nav-item nav-category" style="color: blue; font-weight: bold;">Users</li>
             <li class="nav-item">
                 <a href="{{ route('users.index') }}" class="nav-link">
                     <i class="link-icon" data-feather="users"></i>

@@ -60,7 +60,6 @@ class PgtAiController extends Controller
      */
     public function show(PgtAiResult $result): View
     {
-        $this->authorize('view', $result);
         return view('pgt-ai.results.show', compact('result'));
     }
 
@@ -92,12 +91,10 @@ class PgtAiController extends Controller
      */
     public function destroy(PgtAiResult $result)
     {
-        $this->authorize('delete', $result);
-
         $this->pgtAiService->deleteResult($result);
 
         return redirect()
-            ->route('pgt-ai.results.index')
+            ->route('reports.generate')
             ->with('success', 'Plant disease detection result deleted successfully.');
     }
 

@@ -17,23 +17,27 @@
 <div class="row">
     <div class="col-md-12 grid-margin stretch-card">
         <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h6 class="card-title mb-0">LIST OF ALL PLANT SCAN RESULTS FROM THE GPT-AI SYSTEM</h6>
+                <a href="{{ route('reports.pgt-ai-results.pdf') }}" class="btn btn-danger btn-sm" target="_blank">
+                    <i class="fas fa-file-pdf me-1"></i> Print PDF
+                </a>
+            </div>
             <div class="card-body">
-                <h6 class="card-title">PGT-AI Scan Results</h6>
-                <p class="text-muted mb-3">A comprehensive list of all plant scan results from the PGT-AI system.</p>
                 <div class="table-responsive">
-                    <table id="dataTableExample" class="table">
+                    <table class="table table-hover">
                         <thead>
                             <tr>
                                 <th>ID</th>
                                 <th>User</th>
                                 <th>Plant Name</th>
                                 <th>Plant Image</th>
-                                <th>Status</th>
                                 <th>Disease Name</th>
                                 <th>Disease Details</th>
                                 <th>Suggested Solution</th>
-                                <th>Shared</th>
+                                <th>Prevention Tip</th>
                                 <th>Detected On</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -45,20 +49,19 @@
                                     <td>
                                         <img src="{{ asset('storage/' . $result->plant_image) }}" alt="{{ $result->plant_name }}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 5px;">
                                     </td>
-                                    <td>
-                                        <span class="badge bg-{{ $result->status == 'diseased' ? 'danger' : 'success' }}">
-                                            {{ ucfirst($result->status) }}
-                                        </span>
-                                    </td>
                                     <td>{{ $result->disease_name ?? 'N/A' }}</td>
                                     <td>{{ Str::limit($result->disease_details ?? 'N/A', 50) }}</td>
                                     <td>{{ Str::limit($result->suggested_solution ?? 'N/A', 50) }}</td>
-                                    <td>
-                                        <span class="badge bg-{{ $result->shared ? 'primary' : 'secondary' }}">
-                                            {{ $result->shared ? 'Yes' : 'No' }}
-                                        </span>
-                                    </td>
+                                    <td>{{ Str::limit($result->prevention_tips ?? 'N/A', 50) }}</td>
                                     <td>{{ $result->created_at->format('d M, Y H:i A') }}</td>
+                                    <td>
+                                        <a href="{{ route('pgt-ai.results.show', $result->id) }}" class="btn btn-info btn-sm">View</a>
+                                        <form action="{{ route('pgt-ai.results.destroy', $result->id) }}" method="POST" style="display:inline;">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this result?')">Delete</button>
+                                        </form>
+                                    </td>
                                 </tr>
                             @endforeach
                         </tbody>

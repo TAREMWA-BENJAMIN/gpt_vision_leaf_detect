@@ -46,12 +46,11 @@
                         </div>
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label for="region_id" class="form-label">Region</label>
-                                <select class="form-select" id="region_id" name="region_id" required>
-                                    <option value="">Select Region</option>
-                                    @foreach($regions as $region)
-                                        <option value="{{ $region->id }}">{{ $region->name }}</option>
-                                    @endforeach
+                                <label for="role" class="form-label">User Type</label>
+                                <select class="form-select" id="role" name="role" required>
+                                    <option value="user" selected>User</option>
+                                    <option value="expert">Expert</option>
+                                    <option value="admin">Admin</option>
                                 </select>
                             </div>
                             <div class="col-md-6 mb-3">
@@ -68,21 +67,32 @@
                         </div>
                         <div class="row">
                             <div class="col-md-6 mb-3">
+                                <label for="region_id" class="form-label">Region</label>
+                                <select class="form-select" id="region_id" name="region_id" required>
+                                    <option value="">Select Region</option>
+                                    @foreach($regions as $region)
+                                        <option value="{{ $region->id }}">{{ $region->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
                                 <label for="photo" class="form-label">Photo</label>
                                 <input type="file" class="form-control" id="photo" name="photo" accept="image/*">
                             </div>
                         </div>
                         <div id="admin-fields" style="display: none;">
                             <div class="row">
-                                <div class="col-md-4 mb-3">
+                                <div class="col-md-6 mb-3">
                                     <label for="title" class="form-label">Title</label>
                                     <input type="text" class="form-control" id="title" name="title">
                                 </div>
-                                <div class="col-md-4 mb-3">
+                                <div class="col-md-6 mb-3">
                                     <label for="specialization" class="form-label">Specialization</label>
                                     <input type="text" class="form-control" id="specialization" name="specialization">
                                 </div>
-                                <div class="col-md-4 mb-3">
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
                                     <label for="organization" class="form-label">Organization/Institution</label>
                                     <input type="text" class="form-control" id="organization" name="organization">
                                 </div>

@@ -86,7 +86,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // Routes for Community Forum
     Route::resource('/community', CommunityController::class);
-    Route::post('/community/{message}/reply', [CommunityController::class, 'reply'])->name('community.reply');
+    Route::post('/community', [App\Http\Controllers\CommunityController::class, 'store'])->name('community.store');
+    Route::post('/community/{chat}/reply', [App\Http\Controllers\CommunityController::class, 'reply'])->name('community.reply');
+    Route::delete('/community/{chat}', [App\Http\Controllers\CommunityController::class, 'destroy'])->name('community.destroy');
 
     // Settings routes
     Route::get('/settings', [App\Http\Controllers\UserProfileController::class, 'show'])->name('settings.show');

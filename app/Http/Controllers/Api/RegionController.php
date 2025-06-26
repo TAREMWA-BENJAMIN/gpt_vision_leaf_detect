@@ -23,13 +23,13 @@ class RegionController extends Controller
     public function index(): JsonResponse
     {
         $regions = $this->geographicalService->getRegions();
-        return response()->json($regions);
+        return response()->json(['data' => $regions]);
     }
 
     public function getDistricts(Region $region): JsonResponse
     {
         $districts = $this->geographicalService->getDistricts(['region_id' => $region->id]);
-        return response()->json($districts);
+        return response()->json(['data' => $districts]);
     }
 
     /**

@@ -8,30 +8,44 @@ use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 
 class AuthController extends Controller
 {
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
+            'phone_number' => 'nullable|string|max:20',
+            'user_type' => 'nullable|string|max:50',
+            'region_id' => 'nullable|integer|exists:regions,id',
+            'district_id' => 'nullable|integer|exists:districts,id',
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
         }
 
-        $nameParts = explode(' ', $request->name, 2);
-        $firstName = $nameParts[0];
-        $lastName = $nameParts[1] ?? '';
+        $data = $validator->validated();
+
+        if ($request->hasFile('photo')) {
+            $data['photo'] = $request->file('photo')->store('profile-photos', 'public');
+        }
 
         $user = User::create([
-            'first_name' => $firstName,
-            'last_name' => $lastName,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
+            'first_name' => $data['first_name'],
+            'last_name' => $data['last_name'],
+            'email' => $data['email'],
+            'password' => Hash::make($data['password']),
+            'phone_number' => $data['phone_number'] ?? null,
+            'user_type' => $data['user_type'] ?? null,
+            'region_id' => $data['region_id'] ?? null,
+            'district_id' => $data['district_id'] ?? null,
+            'photo' => $data['photo'] ?? null,
         ]);
 
         $token = $user->createToken('auth_token')->plainTextToken;
@@ -72,5 +86,44 @@ class AuthController extends Controller
         $request->user()->currentAccessToken()->delete();
 
         return response()->json(['message' => 'Logged out successfully']);
+    }
+
+    public function experts(Request $request)
+    {
+        try {
+            $experts = \App\Models\User::where('user_type', 'admin')
+                ->leftJoin('districts', 'users.district_id', '=', 'districts.id')
+                ->leftJoin('regions', 'districts.region_id', '=', 'regions.id')
+                ->select(
+                    'users.id',
+                    'users.title',
+                    'users.email',
+                    'users.phone_number as phone',
+                    'users.organization',
+                    'users.specialization',
+                    'users.photo',
+                    'regions.name as region',
+                    DB::raw("TRIM(CONCAT(COALESCE(users.title, ''), ' ', COALESCE(users.first_name, ''), ' ', COALESCE(users.last_name, ''))) as full_name")
+                )
+                ->get();
+
+            $experts->transform(function ($expert) {
+                $expert->photo_url = $expert->photo ? asset('storage/' . $expert->photo) : null;
+                unset($expert->photo);
+                return $expert;
+            });
+
+            return response()->json([
+                'status' => 'success',
+                'data' => $experts
+            ]);
+            
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Failed to fetch experts',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 }

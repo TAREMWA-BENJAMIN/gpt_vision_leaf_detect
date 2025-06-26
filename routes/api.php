@@ -22,11 +22,14 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::get('/regions', [RegionController::class, 'index']);
 Route::get('/regions/{region}/districts', [RegionController::class, 'getDistricts']);
+Route::apiResource('/community', CommunityController::class)->only(['index', 'show']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', [AuthController::class, 'user']);
     Route::post('/logout', [AuthController::class, 'logout']);
-    Route::apiResource('/community', CommunityController::class);
+    Route::get('/experts', [AuthController::class, 'experts']);
+    Route::apiResource('/community', CommunityController::class)->except(['index', 'show']);
+    Route::post('community/{chat}/reply', [CommunityController::class, 'reply']);
 });
 
 // Test routes for debugging
@@ -66,4 +69,8 @@ Route::prefix('v1')->group(function () {
     Route::get('/results/{result}', [PgtAiController::class, 'show']);
     Route::put('/results/{result}', [PgtAiController::class, 'update']);
     Route::delete('/results/{result}', [PgtAiController::class, 'destroy']);
+});
+
+Route::prefix('pgt-ai')->group(function () {
+    Route::post('results', [PgtAiController::class, 'store']);
 }); 

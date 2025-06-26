@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->timestamp('last_active_at')->nullable()->after('remember_token');
+        Schema::table('chat_replies', function (Blueprint $table) {
+            $table->timestamp('updated_at')->nullable()->after('created_at');
         });
     }
 
@@ -21,8 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('last_active_at');
+        Schema::table('chat_replies', function (Blueprint $table) {
+            $table->dropColumn('updated_at');
         });
     }
 };

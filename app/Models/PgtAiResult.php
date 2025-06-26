@@ -16,15 +16,13 @@ class PgtAiResult extends Model
         'user_id',
         'plant_image',
         'plant_name',
-        'status',
         'disease_name',
         'disease_details',
         'suggested_solution',
-        'shared'
+        'prevention_tips'
     ];
 
     protected $casts = [
-        'shared' => 'boolean',
         'created_at' => 'datetime',
         'updated_at' => 'datetime'
     ];

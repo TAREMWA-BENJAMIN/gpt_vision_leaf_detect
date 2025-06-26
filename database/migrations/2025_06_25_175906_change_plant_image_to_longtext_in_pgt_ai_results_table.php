@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->timestamp('last_active_at')->nullable()->after('remember_token');
+        Schema::table('pgt_ai_results', function (Blueprint $table) {
+            $table->longText('plant_image')->change();
         });
     }
 
@@ -21,8 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('last_active_at');
+        Schema::table('pgt_ai_results', function (Blueprint $table) {
+            $table->string('plant_image', 255)->change();
         });
     }
 };

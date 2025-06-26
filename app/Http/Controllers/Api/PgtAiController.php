@@ -25,7 +25,8 @@ class PgtAiController extends Controller
     public function index(Request $request): JsonResponse
     {
         // For now, return all results without user filtering
-        $results = PgtAiResult::orderBy('created_at', 'desc')
+        $results = PgtAiResult::with('user')
+            ->orderBy('created_at', 'desc')
             ->when($request->boolean('paginate', false), function($query) use ($request) {
                 return $query->paginate($request->integer('per_page', 10));
             }, function($query) {
@@ -68,7 +69,6 @@ class PgtAiController extends Controller
     public function store(PgtAiResultRequest $request): JsonResponse
     {
         $data = $request->validated();
-        // Remove user_id requirement for now
         $result = $this->pgtAiService->createResult($data);
 
         return response()->json($result, 201);

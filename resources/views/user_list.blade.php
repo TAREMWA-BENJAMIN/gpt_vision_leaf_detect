@@ -2,26 +2,17 @@
 
 @section('content')
 <div class="page-content">
-    <nav class="page-breadcrumb">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="#">Users</a></li>
-            <li class="breadcrumb-item active" aria-current="page">User List</li>
-        </ol>
-    </nav>
-
-    <div class="row mb-3">
-        <div class="col-12 text-end">
-            <a href="{{ route('users.create') }}" class="btn btn-primary">
-                <i class="fas fa-user-plus me-1"></i> Add User
-            </a>
-        </div>
-    </div>
 
     <div class="row">
         <div class="col-md-12 grid-margin stretch-card">
             <div class="card">
                 <div class="card-body">
-                    <h6 class="card-title">User List</h6>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h6 class="card-title mb-0">User List</h6>
+                        <a href="{{ route('users.create') }}" class="btn btn-primary">
+                            <i class="fas fa-user-plus me-1"></i> Add User
+                        </a>
+                    </div>
                     <div class="table-responsive">
                         <table id="dataTableExample" class="table">
                             <thead>

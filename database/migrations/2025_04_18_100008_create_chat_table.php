@@ -11,6 +11,7 @@ return new class extends Migration
         Schema::create('chat', function (Blueprint $table) {
             $table->id('id');
             $table->string('chat_topic', 250);
+            $table->text('content');
             $table->foreignId('chat_creator_id')->constrained('users')->onDelete('cascade'); // Reference to 'id' column of 'users' table
             $table->timestamp('chat_created_at')->useCurrent();
 

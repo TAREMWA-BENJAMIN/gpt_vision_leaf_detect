@@ -49,6 +49,10 @@ class PgtAiService
      */
     public function createResult(array $data): PgtAiResult
     {
+        // Only save if plant_image is present and not empty
+        if (empty($data['plant_image'])) {
+            throw new \Exception('Plant image is required.');
+        }
         // Handle base64 image upload
         if (isset($data['plant_image']) && str_starts_with($data['plant_image'], 'data:image')) {
             $base64Image = $data['plant_image'];

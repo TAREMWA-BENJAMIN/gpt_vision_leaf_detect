@@ -4,10 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Chat;
-use App\Models\Message;
-use App\Models\MessageAttachment;
+use App\Models\ChatReply;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
 
 class CommunityController extends Controller
 {
@@ -16,7 +14,7 @@ class CommunityController extends Controller
      */
     public function index()
     {
-        $posts = Chat::with(['creator', 'messages.user', 'messages.attachments', 'messages.replies.user', 'messages.replies.attachments'])
+        $posts = Chat::with(['creator', 'replies.user'])
             ->orderByDesc('chat_created_at')
             ->get();
 
@@ -30,64 +28,60 @@ class CommunityController extends Controller
     {
         $request->validate([
             'chat_topic' => 'required|string|max:255',
-            'message_text' => 'required|string',
-            'attachment' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'attachment' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:4096',
         ]);
 
         $chat = new Chat();
         $chat->chat_topic = $request->chat_topic;
         $chat->chat_created_at = now();
         $chat->chat_creator_id = Auth::id();
-        $chat->save();
-
-        $message = new Message();
-        $message->message_chat_id = $chat->id;
-        $message->message_user_id = Auth::id();
-        $message->message_text = $request->message_text;
-        $message->message_datetime = now();
-        $message->save();
 
         if ($request->hasFile('attachment')) {
-            $path = $request->file('attachment')->store('message_attachments', 'public');
-            MessageAttachment::create([
-                'message_id' => $message->id,
-                'attachment_url' => $path,
-                'file_type' => $request->file('attachment')->getClientMimeType(),
-                'file_size' => $request->file('attachment')->getSize(),
-            ]);
+            $file = $request->file('attachment');
+            $path = $file->store('chat_attachments', 'public');
+            $chat->attachment_url = $path;
+            $chat->file_type = $file->getClientMimeType();
+            $chat->file_size = $file->getSize();
         }
+
+        $chat->save();
 
         return redirect()->route('community.index')->with('success', 'Topic created successfully!');
     }
 
     /**
-     * Handle a reply to a message.
+     * Handle a reply to a topic.
      */
-    public function reply(Request $request, Message $message)
+    public function reply(Request $request, Chat $chat)
     {
         $request->validate([
-            'message_text' => 'required|string',
-            'attachment' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'content' => 'required|string',
+            'attachment' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:4096',
         ]);
 
-        $reply = new Message();
-        $reply->message_chat_id = $message->message_chat_id; // Associate reply with the same chat as the parent message
-        $reply->message_user_id = Auth::id();
-        $reply->message_parent_id = $message->id; // Set the parent message ID
-        $reply->message_text = $request->message_text;
-        $reply->message_datetime = now();
-        $reply->save();
+        $reply = new ChatReply();
+        $reply->chat_id = $chat->id;
+        $reply->user_id = Auth::id();
+        $reply->content = $request->content;
+        $reply->created_at = now();
 
         if ($request->hasFile('attachment')) {
-            $path = $request->file('attachment')->store('message_attachments', 'public');
-            MessageAttachment::create([
-                'message_id' => $reply->id,
-                'attachment_url' => $path,
-                'file_type' => $request->file('attachment')->getClientMimeType(),
-                'file_size' => $request->file('attachment')->getSize(),
-            ]);
+            $file = $request->file('attachment');
+            $path = $file->store('chat_reply_attachments', 'public');
+            $reply->attachment_url = $path;
+            $reply->file_type = $file->getClientMimeType();
+            $reply->file_size = $file->getSize();
         }
 
+        $reply->save();
+
         return redirect()->back()->with('success', 'Reply posted successfully!');
+    }
+
+    public function destroy(Chat $community)
+    {
+        $community->delete();
+
+        return redirect()->route('community.index')->with('success', 'Post deleted successfully.');
     }
 } 

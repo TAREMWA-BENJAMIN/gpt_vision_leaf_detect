@@ -97,68 +97,59 @@
         @forelse($posts as $chat)
             <div class="card forum-card">
                 <div class="card-body">
-                    <div class="forum-header">
-                        <img src="{{ $chat->creator->photo ? asset('storage/' . $chat->creator->photo) : asset('images/default-avatar.png') }}" class="forum-avatar">
-                        <div>
-                            <span class="forum-user">{{ $chat->creator->first_name ?? $chat->creator->name }} {{ $chat->creator->last_name ?? '' }}</span><br>
-                            <span class="forum-time">{{ $chat->chat_created_at->diffForHumans() }}</span>
+                    <div class="d-flex justify-content-between">
+                        <div class="forum-header">
+                            <img src="{{ $chat->creator->photo ? asset('storage/' . $chat->creator->photo) : asset('images/default-avatar.png') }}" class="forum-avatar">
+                            <div>
+                                <span class="forum-user">{{ $chat->creator->first_name ?? $chat->creator->name }} {{ $chat->creator->last_name ?? '' }}</span><br>
+                                <span class="forum-time">{{ $chat->chat_created_at->diffForHumans() }}</span>
+                            </div>
                         </div>
+                        <form action="{{ route('community.destroy', $chat->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this post?');">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                        </form>
                     </div>
-                    <div class="forum-content"><strong>Topic:</strong> {{ $chat->chat_topic }}</div>
+                    <div class="forum-content mt-3">
+                        <strong>Topic:</strong> {{ $chat->chat_topic }}
+                        @if($chat->attachment_url)
+                            <br>
+                            <img src="{{ asset('storage/' . $chat->attachment_url) }}" class="forum-image mt-2">
+                        @endif
+                    </div>
 
                     <div class="forum-replies mt-3">
-                        <strong>Messages:</strong>
-                        @forelse($chat->messages->whereNull('message_parent_id') as $message)
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <strong>Replies</strong>
+                            <button class="btn btn-sm btn-outline-success" data-bs-toggle="collapse" data-bs-target="#replyForm{{ $chat->id }}" aria-expanded="false" aria-controls="replyForm{{ $chat->id }}">
+                                Add Reply
+                            </button>
+                        </div>
+                        <div class="collapse mb-3" id="replyForm{{ $chat->id }}">
+                            <form action="{{ route('community.reply', $chat->id) }}" method="POST" enctype="multipart/form-data">
+                                @csrf
+                                <div class="mb-2">
+                                    <textarea name="content" class="form-control" rows="2" placeholder="Write your reply..." required></textarea>
+                                </div>
+                                <div class="mb-2">
+                                    <label for="replyAttachment{{ $chat->id }}" class="form-label">Attachment (Optional)</label>
+                                    <input type="file" class="form-control" id="replyAttachment{{ $chat->id }}" name="attachment">
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-sm">Submit Reply</button>
+                            </form>
+                        </div>
+                        @forelse($chat->replies as $reply)
                             <div class="forum-reply">
-                                <span class="forum-reply-user">{{ $message->user->first_name ?? $message->user->name }}</span>
-                                <span class="forum-reply-time">{{ $message->message_datetime->diffForHumans() }}</span><br>
-                                {{ $message->message_text }}
-                                @if($message->attachments->isNotEmpty())
-                                    @foreach($message->attachments as $attachment)
-                                        <img src="{{ asset('storage/' . $attachment->attachment_url) }}" class="forum-image mt-2">
-                                    @endforeach
-                                @endif
-
-                                <div class="mt-2">
-                                    <button class="btn btn-sm btn-outline-success" data-bs-toggle="collapse" data-bs-target="#replyForm{{ $message->id }}" aria-expanded="false" aria-controls="replyForm{{ $message->id }}">
-                                        Reply
-                                    </button>
-                                </div>
-
-                                <div class="collapse mt-2" id="replyForm{{ $message->id }}">
-                                    <form action="{{ route('community.reply', $message->id) }}" method="POST" enctype="multipart/form-data">
-                                        @csrf
-                                        <div class="mb-2">
-                                            <textarea name="message_text" class="form-control form-control-sm" rows="2" placeholder="Write your reply..." required></textarea>
-                                        </div>
-                                        <div class="mb-2">
-                                            <label for="replyAttachment{{ $message->id }}" class="form-label">Attachment (Optional)</label>
-                                            <input type="file" class="form-control form-control-sm" id="replyAttachment{{ $message->id }}" name="attachment">
-                                        </div>
-                                        <button type="submit" class="btn btn-primary btn-sm">Submit Reply</button>
-                                    </form>
-                                </div>
-
-                                @if($message->replies->isNotEmpty())
-                                    <div class="ms-4 mt-2">
-                                        <strong>Replies:</strong>
-                                        @foreach($message->replies as $reply)
-                                            <div class="forum-reply">
-                                                <span class="forum-reply-user">{{ $reply->user->first_name ?? $reply->user->name }}</span>
-                                                <span class="forum-reply-time">{{ $reply->message_datetime->diffForHumans() }}</span><br>
-                                                {{ $reply->message_text }}
-                                                @if($reply->attachments->isNotEmpty())
-                                                    @foreach($reply->attachments as $attachment)
-                                                        <img src="{{ asset('storage/' . $attachment->attachment_url) }}" class="forum-image mt-2">
-                                                    @endforeach
-                                                @endif
-                                            </div>
-                                        @endforeach
-                                    </div>
+                                <span class="forum-reply-user">{{ $reply->user->first_name ?? $reply->user->name }}</span>
+                                <span class="forum-reply-time">{{ $reply->created_at->diffForHumans() }}</span><br>
+                                {{ $reply->content }}
+                                @if($reply->attachment_url)
+                                    <br><img src="{{ asset('storage/' . $reply->attachment_url) }}" class="forum-image mt-2">
                                 @endif
                             </div>
                         @empty
-                            <div class="text-muted">No messages yet for this topic.</div>
+                            <div class="text-muted">No replies yet.</div>
                         @endforelse
                     </div>
                 </div>
@@ -166,14 +157,12 @@
         @empty
             <div class="alert alert-info">No forum topics yet. Be the first to create one!</div>
         @endforelse
-
         <!-- Floating Action Button for New Post -->
         <button class="btn btn-success rounded-circle floating-action-button" data-bs-toggle="modal" data-bs-target="#newChatModal">
             <i class="fas fa-plus"></i>
         </button>
     </div>
 </div>
-
 <!-- New Chat Modal -->
 <div class="modal fade" id="newChatModal" tabindex="-1" aria-labelledby="newChatModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -188,10 +177,6 @@
                     <div class="mb-3">
                         <label for="chatTopic" class="form-label">Topic Title</label>
                         <input type="text" class="form-control" id="chatTopic" name="chat_topic" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="chatMessage" class="form-label">Initial Message</label>
-                        <textarea class="form-control" id="chatMessage" name="message_text" rows="3" required></textarea>
                     </div>
                     <div class="mb-3">
                         <label for="chatAttachment" class="form-label">Attachment (Optional)</label>

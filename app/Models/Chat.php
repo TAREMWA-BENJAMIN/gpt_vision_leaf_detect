@@ -19,8 +19,12 @@ class Chat extends Model
 
     protected $fillable = [
         'chat_topic',
+        'content',
         'chat_creator_id',
         'chat_created_at',
+        'attachment_url',
+        'file_type',
+        'file_size',
     ];
 
     protected $casts = [
@@ -32,8 +36,8 @@ class Chat extends Model
         return $this->belongsTo(User::class, 'chat_creator_id', 'id');
     }
 
-    public function messages(): HasMany
+    public function replies(): HasMany
     {
-        return $this->hasMany(Message::class, 'message_chat_id', 'id');
+        return $this->hasMany(ChatReply::class, 'chat_id');
     }
 } 
