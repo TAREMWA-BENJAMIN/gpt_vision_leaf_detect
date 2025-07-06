@@ -7,16 +7,19 @@ use App\Http\Requests\PgtAiResultRequest;
 use App\Models\PgtAiResult;
 use App\Models\User;
 use App\Services\PgtAiService;
+use App\Services\AuditTrailService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class PgtAiController extends Controller
 {
     protected PgtAiService $pgtAiService;
+    protected $auditTrailService;
 
-    public function __construct(PgtAiService $pgtAiService)
+    public function __construct(PgtAiService $pgtAiService, AuditTrailService $auditTrailService)
     {
         $this->pgtAiService = $pgtAiService;
+        $this->auditTrailService = $auditTrailService;
     }
 
     /**
@@ -71,6 +74,9 @@ class PgtAiController extends Controller
         $data = $request->validated();
         $result = $this->pgtAiService->createResult($data);
 
+        // Log scan action
+        $this->auditTrailService->log('scan', $result, 'User performed a scan (API)');
+
         return response()->json($result, 201);
     }
 
@@ -100,5 +106,17 @@ class PgtAiController extends Controller
         // Remove authorization check
         $deleted = $this->pgtAiService->deleteResult($result);
         return response()->json(['success' => $deleted]);
+    }
+
+    /**
+     * Get all scan results for the authenticated user
+     */
+    public function myScans(Request $request): JsonResponse
+    {
+        $user = $request->user();
+        $results = PgtAiResult::where('user_id', $user->id)
+            ->orderBy('created_at', 'desc')
+            ->get();
+        return response()->json(['data' => $results]);
     }
 } 

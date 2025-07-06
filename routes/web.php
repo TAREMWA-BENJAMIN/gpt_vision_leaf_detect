@@ -10,6 +10,7 @@ use App\Http\Controllers\UserProfileController;
 use App\Http\Controllers\CommunityController;
 use App\Http\Controllers\DiseaseController;
 use App\Http\Controllers\ExpertController;
+use App\Http\Controllers\AuditTrailController;
 
 // Public routes
 Route::get('/', function () {
@@ -103,4 +104,22 @@ Route::get('/diseases', [App\Http\Controllers\DiseaseController::class, 'index']
 Route::get('/experts', [App\Http\Controllers\ExpertController::class, 'index'])->name('experts.index');
 
 Route::get('/search/users', [App\Http\Controllers\UserController::class, 'search'])->name('users.search');
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/admin/audit-trail', [\App\Http\Controllers\AuditTrailController::class, 'index'])->name('audit_trail.index');
+});
+
+Route::get('/test-audit-log', function() {
+    app(\App\Services\AuditTrailService::class)->log('test', null, 'Test audit log from route');
+    return 'Audit log attempted. Check DB and logs.';
+});
+
+Route::get('/truncate-audit-tables', function() {
+    \DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+    \DB::table('audit_trail')->truncate();
+    \DB::table('chat_replies')->truncate();
+    \DB::table('chat')->truncate();
+    \DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+    return 'Truncated audit_trail, chat_replies, and chat tables.';
+});
 

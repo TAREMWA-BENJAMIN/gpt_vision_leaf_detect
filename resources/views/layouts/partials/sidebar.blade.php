@@ -79,6 +79,14 @@
                     <span class="link-title">User List</span>
                 </a>
             </li>
+
+            <li class="nav-item nav-category" style="color: blue; font-weight: bold;">Admin</li>
+            <li class="nav-item">
+                <a href="{{ route('audit_trail.index') }}" class="nav-link">
+                    <i class="link-icon" data-feather="activity"></i>
+                    <span class="link-title">Audit Trail</span>
+                </a>
+            </li>
         </ul>
     </div>
 </nav>

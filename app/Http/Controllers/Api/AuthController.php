@@ -9,9 +9,17 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
+use App\Services\AuditTrailService;
 
 class AuthController extends Controller
 {
+    protected $auditTrailService;
+
+    public function __construct(AuditTrailService $auditTrailService)
+    {
+        $this->auditTrailService = $auditTrailService;
+    }
+
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -50,6 +58,9 @@ class AuthController extends Controller
 
         $token = $user->createToken('auth_token')->plainTextToken;
 
+        // Log registration
+        $this->auditTrailService->log('register', $user, 'User registered');
+
         return response()->json([
             'access_token' => $token,
             'token_type' => 'Bearer',
@@ -60,14 +71,18 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         if (!Auth::attempt($request->only('email', 'password'))) {
+            // Log failed login attempt
+            $this->auditTrailService->log('login_failed', null, 'Failed login attempt for email: ' . $request->email);
             return response()->json([
                 'message' => 'Invalid login details'
             ], 401);
         }
 
         $user = User::where('email', $request['email'])->firstOrFail();
-
         $token = $user->createToken('auth_token')->plainTextToken;
+
+        // Log successful login
+        $this->auditTrailService->log('login', $user, 'User logged in');
 
         return response()->json([
             'access_token' => $token,
@@ -83,7 +98,11 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
+        $user = $request->user();
         $request->user()->currentAccessToken()->delete();
+
+        // Log logout
+        $this->auditTrailService->log('logout', $user, 'User logged out');
 
         return response()->json(['message' => 'Logged out successfully']);
     }

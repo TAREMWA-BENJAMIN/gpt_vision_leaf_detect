@@ -30,7 +30,18 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/experts', [AuthController::class, 'experts']);
     Route::apiResource('/community', CommunityController::class)->except(['index', 'show']);
     Route::post('community/{chat}/reply', [CommunityController::class, 'reply']);
+    // Protect scan/store endpoints
+    Route::post('/v1/results', [PgtAiController::class, 'store']);
+    Route::put('/v1/results/{result}', [PgtAiController::class, 'update']);
+    Route::delete('/v1/results/{result}', [PgtAiController::class, 'destroy']);
+    Route::post('pgt-ai/results', [PgtAiController::class, 'store']);
+    Route::get('/v1/my-scans', [PgtAiController::class, 'myScans']);
 });
+
+// Public endpoints
+Route::get('/v1/results', [PgtAiController::class, 'index']);
+Route::get('/v1/results/shared', [PgtAiController::class, 'shared']);
+Route::get('/v1/results/{result}', [PgtAiController::class, 'show']);
 
 // Test routes for debugging
 Route::get('/', function() {

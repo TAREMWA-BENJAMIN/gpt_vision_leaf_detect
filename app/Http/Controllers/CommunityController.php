@@ -6,9 +6,17 @@ use Illuminate\Http\Request;
 use App\Models\Chat;
 use App\Models\ChatReply;
 use Illuminate\Support\Facades\Auth;
+use App\Services\AuditTrailService;
 
 class CommunityController extends Controller
 {
+    protected $auditTrailService;
+
+    public function __construct(AuditTrailService $auditTrailService)
+    {
+        $this->auditTrailService = $auditTrailService;
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -46,6 +54,8 @@ class CommunityController extends Controller
 
         $chat->save();
 
+        $this->auditTrailService->log('create_post', $chat, 'User created a new forum post');
+
         return redirect()->route('community.index')->with('success', 'Topic created successfully!');
     }
 
@@ -74,6 +84,8 @@ class CommunityController extends Controller
         }
 
         $reply->save();
+
+        $this->auditTrailService->log('create_reply', $reply, 'User replied to a forum post');
 
         return redirect()->back()->with('success', 'Reply posted successfully!');
     }

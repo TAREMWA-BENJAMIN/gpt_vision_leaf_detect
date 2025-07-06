@@ -15,16 +15,19 @@ use Illuminate\Http\RedirectResponse;
 use App\Services\GeographicalService;
 use App\Models\District;
 use App\Models\Region;
+use App\Services\AuditTrailService;
 
 class UserController extends Controller
 {
     protected UserService $userService;
     protected GeographicalService $geographicalService;
+    protected $auditTrailService;
 
-    public function __construct(UserService $userService, GeographicalService $geographicalService)
+    public function __construct(UserService $userService, GeographicalService $geographicalService, AuditTrailService $auditTrailService)
     {
         $this->userService = $userService;
         $this->geographicalService = $geographicalService;
+        $this->auditTrailService = $auditTrailService;
     }
 
     /**
@@ -56,6 +59,10 @@ class UserController extends Controller
             $data['photo'] = $request->file('photo')->store('profile-photos', 'public');
         }
         $user = $this->userService->create($data);
+
+        $action = 'created User - '.$user->first_name.' '.$user->last_name;
+        // Log user creation
+        $this->auditTrailService->log('create', $user, $action);
 
         // If the current user is authenticated (admin), redirect to user list
         if (auth()->check()) {
@@ -113,6 +120,8 @@ class UserController extends Controller
     public function update(UpdateUserRequest $request, User $user): \Illuminate\Http\RedirectResponse
     {
         $this->userService->update($user, $request->validated());
+        // Log user update
+        $this->auditTrailService->log('update', $user, 'User updated');
         return redirect()->route('users.index')->with('success', 'User updated successfully.');
     }
 
@@ -122,6 +131,8 @@ class UserController extends Controller
     public function destroy(User $user): \Illuminate\Http\RedirectResponse
     {
         $this->userService->delete($user);
+        // Log user deletion
+        $this->auditTrailService->log('delete', $user, 'User deleted');
         return redirect()->route('users.index')->with('success', 'User deleted successfully.');
     }
 

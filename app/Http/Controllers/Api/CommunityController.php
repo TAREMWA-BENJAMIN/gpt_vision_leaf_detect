@@ -10,9 +10,17 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Http\Resources\ChatResource;
 use App\Http\Resources\ChatReplyResource;
+use App\Services\AuditTrailService;
 
 class CommunityController extends Controller
 {
+    protected $auditTrailService;
+
+    public function __construct(AuditTrailService $auditTrailService)
+    {
+        $this->auditTrailService = $auditTrailService;
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -79,6 +87,9 @@ class CommunityController extends Controller
             }
             
             $chat->save();
+
+            // Log post creation
+            $this->auditTrailService->log('create_post', $chat, 'User created a new forum post (API)');
 
             DB::commit();
 
@@ -262,6 +273,9 @@ class CommunityController extends Controller
         }
 
         $reply->save();
+
+        // Log reply creation
+        $this->auditTrailService->log('create_reply', $reply, 'User replied to a forum post (API)');
 
         // Load the user relationship so it can be returned in the response
         $reply->load('user');
